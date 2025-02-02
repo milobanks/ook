@@ -1,0 +1,6 @@
+build/
+.ropeproject/
+.cache/
+
+.DS_Store
+compile_commands.json

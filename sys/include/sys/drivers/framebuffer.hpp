@@ -1,0 +1,1 @@
+/* Stub for when we implement EDID. */
