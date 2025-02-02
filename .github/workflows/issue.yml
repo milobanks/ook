@@ -1,0 +1,26 @@
+name: Promote Mailing List
+
+on:
+    issues:
+        types:
+            - opened
+
+jobs:
+    auto-reply:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Comment on new issue
+              uses: actions/github-script@v7
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  script: |
+                      const repo = context.repo.repo;
+                      const issue_number = context.payload.issue.number;
+                      const message = `Thanks for opening this issue! I'll do my best to get back to you quickly, but you should really try the mailing list at https://lists.sr.ht/~milobanks/${repo} if you're looking for a faster response.`;
+
+                      await github.rest.issues.createComment({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        issue_number: issue_number,
+                        body: message
+                      });

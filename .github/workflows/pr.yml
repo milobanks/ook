@@ -1,0 +1,28 @@
+name: Promote Mailing List
+
+on:
+    pull_request:
+        types:
+            - opened
+
+jobs:
+    auto-reply:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Comment on new pull request
+              uses: actions/github-script@v7
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  script: |
+                      const repo = context.repo.repo;
+                      const pr_number = context.payload.pull_request.number;
+                      const message = `Thanks for the pull request! I don't merge PRs directly into GitHub, but we can discuss it here, and then I can create and apply the patch myself.
+
+                      If you'd prefer, you can also send patches via the mailing list at https://lists.sr.ht/~milobanks/${repo}.`;
+
+                      await github.rest.issues.createComment({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        issue_number: pr_number,
+                        body: message
+                      });
