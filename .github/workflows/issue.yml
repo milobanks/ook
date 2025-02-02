@@ -1,4 +1,4 @@
-name: Promote Mailing List
+name: Promote Mailing List (Issue)
 
 on:
     issues:
@@ -9,7 +9,16 @@ jobs:
     auto-reply:
         runs-on: ubuntu-latest
         steps:
+            - name: Detect if we should skip notifying
+              id: check_author
+              run: |
+                  if [[ "${{ github.event.issue.user.login }}" == "milobanks" ]]; then
+                    echo "Skipping because author is milobanks."
+                    echo "skip_reply=true" >> $GITHUB_ENV
+                  fi
+
             - name: Comment on new issue
+              if: env.skip_reply != 'true'
               uses: actions/github-script@v7
               with:
                   github-token: ${{ secrets.PAT }}
